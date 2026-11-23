@@ -1,8 +1,10 @@
 import sys
 import os
+import csv
 from PySide6.QtWidgets import (
-    QApplication, QWidget, QLabel, QTableWidget,
-    QVBoxLayout, QHeaderView
+    QApplication, QWidget, QLabel, QPushButton,
+    QTableWidget, QTableWidgetItem, QFileDialog,
+    QVBoxLayout, QHBoxLayout, QHeaderView
 )
 from PySide6.QtCore import Qt
 
@@ -31,6 +33,14 @@ class GradesApp(QWidget):
         title_label.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(title_label)
 
+        top_buttons_layout = QHBoxLayout()
+
+        self.btn_load_file = QPushButton("Select Grades File")
+        self.btn_load_file.clicked.connect(self.load_file)
+        top_buttons_layout.addWidget(self.btn_load_file)
+
+        main_layout.addLayout(top_buttons_layout)
+
         self.table = QTableWidget(50, 3)
         self.table.setHorizontalHeaderLabels(["ID", "Original Grades", "Corrected Grades"])
         header = self.table.horizontalHeader()
@@ -44,6 +54,47 @@ class GradesApp(QWidget):
         if os.path.exists(qss_path):
             with open(qss_path, "r", encoding="utf-8") as f:
                 self.setStyleSheet(f.read())
+
+    def load_file(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Select Grades File", "", "CSV Files (*.csv);;All Files (*)"
+        )
+        if not file_path:
+            return
+
+        self.selected_file = file_path
+        self.student_ids = []
+        self.original_grades = []
+        self.corrected_grades = []
+
+        with open(self.selected_file, "r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            header = next(reader, None)
+            for row in reader:
+                if row and len(row) >= 2:
+                    self.student_ids.append(row[0].strip())
+                    self.original_grades.append(int(float(row[1].strip())))
+
+        self.corrected_grades = list(self.original_grades)
+        self.update_table()
+
+    def update_table(self):
+        self.table.clearContents()
+        total_rows = max(50, len(self.student_ids))
+        self.table.setRowCount(total_rows)
+
+        for row in range(len(self.student_ids)):
+            id_item = QTableWidgetItem(str(self.student_ids[row]))
+            orig_item = QTableWidgetItem(str(self.original_grades[row]))
+            corr_item = QTableWidgetItem(str(self.corrected_grades[row]))
+
+            id_item.setTextAlignment(Qt.AlignCenter)
+            orig_item.setTextAlignment(Qt.AlignCenter)
+            corr_item.setTextAlignment(Qt.AlignCenter)
+
+            self.table.setItem(row, 0, id_item)
+            self.table.setItem(row, 1, orig_item)
+            self.table.setItem(row, 2, corr_item)
 
 
 if __name__ == "__main__":
