@@ -2,10 +2,11 @@ import sys
 import os
 import csv
 from PySide6.QtWidgets import (
-    QApplication, QWidget, QLabel, QPushButton,
+    QApplication, QWidget, QLabel, QPushButton, QLineEdit,
     QTableWidget, QTableWidgetItem, QFileDialog,
     QVBoxLayout, QHBoxLayout, QHeaderView
 )
+from PySide6.QtGui import QIntValidator
 from PySide6.QtCore import Qt
 
 
@@ -40,6 +41,18 @@ class GradesApp(QWidget):
         top_buttons_layout.addWidget(self.btn_load_file)
 
         main_layout.addLayout(top_buttons_layout)
+
+        bonus_layout = QHBoxLayout()
+        bonus_label = QLabel("Correction Points (Press Enter):")
+
+        self.bonus_input = QLineEdit()
+        self.bonus_input.setPlaceholderText("Enter integer and press Enter...")
+        self.bonus_input.setValidator(QIntValidator(-100, 100, self))
+        self.bonus_input.returnPressed.connect(self.apply_bonus)
+
+        bonus_layout.addWidget(bonus_label)
+        bonus_layout.addWidget(self.bonus_input)
+        main_layout.addLayout(bonus_layout)
 
         self.table = QTableWidget(50, 3)
         self.table.setHorizontalHeaderLabels(["ID", "Original Grades", "Corrected Grades"])
@@ -95,6 +108,27 @@ class GradesApp(QWidget):
             self.table.setItem(row, 0, id_item)
             self.table.setItem(row, 1, orig_item)
             self.table.setItem(row, 2, corr_item)
+
+    def apply_bonus(self):
+        text = self.bonus_input.text().strip()
+        if not text:
+            return
+
+        try:
+            bonus = int(text)
+        except ValueError:
+            return
+
+        self.corrected_grades = []
+        for orig in self.original_grades:
+            new_grade = orig + bonus
+            if new_grade > 100:
+                new_grade = 100
+            elif new_grade < 0:
+                new_grade = 0
+            self.corrected_grades.append(new_grade)
+
+        self.update_table()
 
 
 if __name__ == "__main__":
