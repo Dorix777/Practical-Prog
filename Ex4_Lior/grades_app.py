@@ -1,12 +1,21 @@
 import sys
 import os
-from PySide6.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QLabel, QTableWidget,
+    QVBoxLayout, QHeaderView
+)
 from PySide6.QtCore import Qt
 
 
 class GradesApp(QWidget):
     def __init__(self):
         super().__init__()
+
+        self.student_ids = []
+        self.original_grades = []
+        self.corrected_grades = []
+        self.selected_file = ''
+
         self.init_ui()
         self.load_stylesheet()
 
@@ -21,6 +30,12 @@ class GradesApp(QWidget):
         title_label.setObjectName("headerTitle")
         title_label.setAlignment(Qt.AlignCenter)
         main_layout.addWidget(title_label)
+
+        self.table = QTableWidget(50, 3)
+        self.table.setHorizontalHeaderLabels(["ID", "Original Grades", "Corrected Grades"])
+        header = self.table.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.Stretch)
+        main_layout.addWidget(self.table)
 
         self.setLayout(main_layout)
 
