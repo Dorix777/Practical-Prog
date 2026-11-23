@@ -1,10 +1,13 @@
 import sys
 import os
 import csv
+import platform
+import subprocess
+
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton, QLineEdit,
-    QTableWidget, QTableWidgetItem, QFileDialog,
-    QVBoxLayout, QHBoxLayout, QHeaderView
+    QTableWidget, QTableWidgetItem, QFileDialog, QVBoxLayout,
+    QHBoxLayout, QHeaderView, QMessageBox
 )
 from PySide6.QtGui import QIntValidator
 from PySide6.QtCore import Qt
@@ -59,6 +62,11 @@ class GradesApp(QWidget):
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.Stretch)
         main_layout.addWidget(self.table)
+
+        self.btn_update_file = QPushButton("Update File")
+        self.btn_update_file.setObjectName("updateButton")
+        self.btn_update_file.clicked.connect(self.update_file)
+        main_layout.addWidget(self.btn_update_file)
 
         self.setLayout(main_layout)
 
@@ -129,6 +137,31 @@ class GradesApp(QWidget):
             self.corrected_grades.append(new_grade)
 
         self.update_table()
+
+    def update_file(self):
+        if not self.selected_file:
+            QMessageBox.warning(self, "Warning", "Please select a file first!")
+            return
+
+        with open(self.selected_file, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["ID", "Grade"])
+            for s_id, corr in zip(self.student_ids, self.corrected_grades):
+                writer.writerow([s_id, corr])
+
+        self.open_file_cross_platform(self.selected_file)
+
+    def open_file_cross_platform(self, file_path):
+        current_os = platform.system()
+        try:
+            if current_os == "Windows":
+                os.startfile(file_path)
+            elif current_os == "Darwin":
+                subprocess.run(["open", file_path], check=False)
+            else:
+                subprocess.run(["xdg-open", file_path], check=False)
+        except Exception as e:
+            print(f"Error opening file: {e}")
 
 
 if __name__ == "__main__":
