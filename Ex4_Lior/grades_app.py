@@ -12,6 +12,8 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QIntValidator
 from PySide6.QtCore import Qt
 
+from About import AboutWindow
+
 
 class GradesApp(QWidget):
     def __init__(self):
@@ -21,6 +23,8 @@ class GradesApp(QWidget):
         self.original_grades = []
         self.corrected_grades = []
         self.selected_file = ''
+
+        self.about_window = None
 
         self.init_ui()
         self.load_stylesheet()
@@ -42,6 +46,11 @@ class GradesApp(QWidget):
         self.btn_load_file = QPushButton("Select Grades File")
         self.btn_load_file.clicked.connect(self.load_file)
         top_buttons_layout.addWidget(self.btn_load_file)
+
+        self.btn_about = QPushButton("About")
+        self.btn_about.setObjectName("aboutButton")
+        self.btn_about.clicked.connect(self.open_about)
+        top_buttons_layout.addWidget(self.btn_about)
 
         main_layout.addLayout(top_buttons_layout)
 
@@ -162,6 +171,11 @@ class GradesApp(QWidget):
                 subprocess.run(["xdg-open", file_path], check=False)
         except Exception as e:
             print(f"Error opening file: {e}")
+
+    def open_about(self):
+        if self.about_window is None:
+            self.about_window = AboutWindow()
+        self.about_window.show()
 
 
 if __name__ == "__main__":
