@@ -1,0 +1,85 @@
+QWidget {
+    background-color: #f5f7fa;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+    color: #2d3748;
+}
+
+QLabel#headerTitle {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1a365d;
+    padding: 10px 0;
+}
+
+QPushButton {
+    background-color: #3182ce;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 8px 16px;
+    border: none;
+    min-height: 20px;
+}
+
+QPushButton:hover {
+    background-color: #2b6cb0;
+}
+
+QPushButton:pressed {
+    background-color: #2c5282;
+}
+
+QPushButton#updateButton {
+    background-color: #38a169;
+}
+
+QPushButton#updateButton:hover {
+    background-color: #2f855a;
+}
+
+QPushButton#aboutButton {
+    background-color: #718096;
+}
+
+QPushButton#aboutButton:hover {
+    background-color: #4a5568;
+}
+
+QLineEdit {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 14px;
+    color: #2d3748;
+}
+
+QLineEdit:focus {
+    border: 2px solid #3182ce;
+}
+
+QTableWidget {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    gridline-color: #edf2f7;
+    selection-background-color: #ebf8ff;
+    selection-color: #2b6cb0;
+}
+
+QHeaderView::section {
+    background-color: #edf2f7;
+    color: #4a5568;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 8px;
+    border: none;
+    border-bottom: 2px solid #cbd5e0;
+}
+
+QLabel#aboutName {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1a202c;
+}
