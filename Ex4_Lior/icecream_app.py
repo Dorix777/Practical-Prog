@@ -1,8 +1,9 @@
 import sys
 import os
+import csv
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton,
-    QVBoxLayout, QHBoxLayout
+    QFileDialog, QVBoxLayout, QHBoxLayout
 )
 from PySide6.QtCore import Qt
 
@@ -39,6 +40,7 @@ class IceCreamApp(QWidget):
         top_buttons_layout = QHBoxLayout()
 
         self.btn_load_file = QPushButton("Select Ice Cream CSV File")
+        self.btn_load_file.clicked.connect(self.load_file)
         top_buttons_layout.addWidget(self.btn_load_file)
 
         self.btn_about = QPushButton("About")
@@ -71,6 +73,29 @@ class IceCreamApp(QWidget):
         self.ax.set_xlabel("Temperature")
         self.ax.set_ylabel("Revenue")
         self.canvas.draw()
+
+    def load_file(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Select Ice Cream CSV File", "", "CSV Files (*.csv);;All Files (*)"
+        )
+        if not file_path:
+            return
+
+        self.temperatures = []
+        self.revenues = []
+
+        with open(file_path, "r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            next(reader, None)
+            for row in reader:
+                if row and len(row) >= 2:
+                    self.temperatures.append(float(row[0].strip()))
+                    self.revenues.append(float(row[1].strip()))
+
+        self.draw_graph()
+
+    def draw_graph(self):
+        pass
 
     def open_about(self):
         if self.about_window is None:
