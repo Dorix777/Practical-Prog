@@ -13,7 +13,7 @@ from matplotlib.figure import Figure
 try:
     from About import AboutWindow
 except ImportError:
-    from Ex4_Lior.About import AboutWindow
+    from Ex4_Lior.Part2.About import AboutWindow
 
 
 class IceCreamApp(QWidget):
@@ -68,7 +68,7 @@ class IceCreamApp(QWidget):
                 self.setStyleSheet(f.read())
         except:
             try:
-                with open("Ex4_Lior/icecream_style.qss", "r") as f:
+                with open("Ex4_Lior/Part2/icecream_style.qss", "r") as f:
                     self.setStyleSheet(f.read())
             except:
                 pass

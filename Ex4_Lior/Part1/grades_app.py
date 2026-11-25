@@ -9,7 +9,7 @@ from PySide6.QtCore import Qt, QUrl
 try:
     from About import AboutWindow
 except ImportError:
-    from Ex4_Lior.About import AboutWindow
+    from Ex4_Lior.Part1.About import AboutWindow
 
 
 class GradesApp(QWidget):
@@ -82,7 +82,7 @@ class GradesApp(QWidget):
                 self.setStyleSheet(f.read())
         except:
             try:
-                with open("Ex4_Lior/grades_style.qss", "r") as f:
+                with open("Ex4_Lior/Part1/grades_style.qss", "r") as f:
                     self.setStyleSheet(f.read())
             except:
                 pass

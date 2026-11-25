@@ -15,7 +15,7 @@ class AboutWindow(QWidget):
         self.image_label = QLabel(self)
         pixmap = QPixmap("profile.png")
         if pixmap.isNull():
-            pixmap = QPixmap("Ex4_Lior/profile.png")
+            pixmap = QPixmap("Ex4_Lior/Part1/profile.png")
         if not pixmap.isNull():
             self.image_label.setPixmap(pixmap.scaled(130, 130, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.image_label.setAlignment(Qt.AlignCenter)
