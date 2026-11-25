@@ -21,7 +21,7 @@ class AboutWindow(QWidget):
         self.email_label = QLabel("Email: lior.dori@example.com", self)
         self.email_label.setGeometry(20, 230, 260, 25)
 
-        self.link_label = QLabel('<a href="https://www.linkedin.com/in/lior-dori/">LinkedIn Profile</a>', self)
+        self.link_label = QLabel('<a href="https://www.linkedin.com/in/lior-dori-789582382/">LinkedIn Profile</a>', self)
         self.link_label.setGeometry(20, 265, 260, 25)
         self.link_label.setOpenExternalLinks(True)
 

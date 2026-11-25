@@ -14,6 +14,8 @@ class AboutWindow(QWidget):
 
         self.image_label = QLabel(self)
         pixmap = QPixmap("profile.png")
+        if pixmap.isNull():
+            pixmap = QPixmap("Ex4_Lior/profile.png")
         if not pixmap.isNull():
             self.image_label.setPixmap(pixmap.scaled(130, 130, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.image_label.setAlignment(Qt.AlignCenter)
@@ -28,7 +30,7 @@ class AboutWindow(QWidget):
         self.email_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.email_label)
 
-        self.linkedin_label = QLabel('<a href="https://www.linkedin.com/in/lior-dori/">LinkedIn Profile</a>', self)
+        self.linkedin_label = QLabel('<a href="https://www.linkedin.com/in/lior-dori-789582382/">LinkedIn Profile</a>', self)
         self.linkedin_label.setAlignment(Qt.AlignCenter)
         self.linkedin_label.setOpenExternalLinks(True)
         layout.addWidget(self.linkedin_label)
