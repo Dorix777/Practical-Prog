@@ -1,6 +1,8 @@
 import sys
 import os
 import csv
+import numpy as np
+
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton,
     QFileDialog, QVBoxLayout, QHBoxLayout
@@ -108,7 +110,18 @@ class IceCreamApp(QWidget):
         self.ax.set_xlabel("Outside Temperature (°C)", fontsize=11)
         self.ax.set_ylabel("Ice Cream Revenue ($)", fontsize=11)
 
-        self.ax.legend(loc='upper left', frameon=False)
+        slope, intercept = np.polyfit(self.temperatures, self.revenues, 1)
+
+        x_vals = np.linspace(min(self.temperatures), max(self.temperatures), 200)
+        y_vals = slope * x_vals + intercept
+
+        sign = "+" if intercept >= 0 else "-"
+        abs_intercept = abs(intercept)
+        equation_label = f"Trendline: y = {slope:.2f}x {sign} {abs_intercept:.2f}"
+
+        self.ax.plot(x_vals, y_vals, color='#e53e3e', linewidth=1.5, label=equation_label)
+        self.ax.legend(loc='upper left', frameon=False, fontsize=10)
+
         self.canvas.draw()
 
     def open_about(self):
