@@ -1,16 +1,10 @@
-import sys
-import os
-import csv
-import platform
-import subprocess
-
 from PySide6.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton, QLineEdit,
     QTableWidget, QTableWidgetItem, QFileDialog, QVBoxLayout,
     QHBoxLayout, QHeaderView, QMessageBox
 )
-from PySide6.QtGui import QIntValidator
-from PySide6.QtCore import Qt
+from PySide6.QtGui import QIntValidator, QDesktopServices
+from PySide6.QtCore import Qt, QUrl
 
 from About import AboutWindow
 
@@ -80,10 +74,11 @@ class GradesApp(QWidget):
         self.setLayout(main_layout)
 
     def load_stylesheet(self):
-        qss_path = os.path.join(os.path.dirname(__file__), "grades_style.qss")
-        if os.path.exists(qss_path):
-            with open(qss_path, "r", encoding="utf-8") as f:
+        try:
+            with open("grades_style.qss", "r") as f:
                 self.setStyleSheet(f.read())
+        except:
+            pass
 
     def load_file(self):
         file_path, _ = QFileDialog.getOpenFileName(
@@ -97,13 +92,15 @@ class GradesApp(QWidget):
         self.original_grades = []
         self.corrected_grades = []
 
-        with open(self.selected_file, "r", encoding="utf-8") as f:
-            reader = csv.reader(f)
-            header = next(reader, None)
-            for row in reader:
-                if row and len(row) >= 2:
-                    self.student_ids.append(row[0].strip())
-                    self.original_grades.append(int(float(row[1].strip())))
+        with open(self.selected_file, "r") as f:
+            lines = f.readlines()
+
+        for line in lines[1:]:
+            line = line.strip()
+            if line:
+                parts = line.split(",")
+                self.student_ids.append(parts[0])
+                self.original_grades.append(int(parts[1]))
 
         self.corrected_grades = list(self.original_grades)
         self.update_table()
@@ -152,25 +149,12 @@ class GradesApp(QWidget):
             QMessageBox.warning(self, "Warning", "Please select a file first!")
             return
 
-        with open(self.selected_file, "w", newline="", encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerow(["ID", "Grade"])
-            for s_id, corr in zip(self.student_ids, self.corrected_grades):
-                writer.writerow([s_id, corr])
+        with open(self.selected_file, "w") as f:
+            f.write("ID,Grade\n")
+            for i in range(len(self.student_ids)):
+                f.write(f"{self.student_ids[i]},{self.corrected_grades[i]}\n")
 
-        self.open_file_cross_platform(self.selected_file)
-
-    def open_file_cross_platform(self, file_path):
-        current_os = platform.system()
-        try:
-            if current_os == "Windows":
-                os.startfile(file_path)
-            elif current_os == "Darwin":
-                subprocess.run(["open", file_path], check=False)
-            else:
-                subprocess.run(["xdg-open", file_path], check=False)
-        except Exception as e:
-            print(f"Error opening file: {e}")
+        QDesktopServices.openUrl(QUrl.fromLocalFile(self.selected_file))
 
     def open_about(self):
         if self.about_window is None:
@@ -179,7 +163,7 @@ class GradesApp(QWidget):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    app = QApplication([])
     window = GradesApp()
     window.show()
-    sys.exit(app.exec())
+    app.exec()

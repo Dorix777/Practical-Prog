@@ -1,6 +1,3 @@
-import sys
-import os
-import csv
 import numpy as np
 
 from PySide6.QtWidgets import (
@@ -63,10 +60,11 @@ class IceCreamApp(QWidget):
         self.setLayout(main_layout)
 
     def load_stylesheet(self):
-        qss_path = os.path.join(os.path.dirname(__file__), "icecream_style.qss")
-        if os.path.exists(qss_path):
-            with open(qss_path, "r", encoding="utf-8") as f:
+        try:
+            with open("icecream_style.qss", "r") as f:
                 self.setStyleSheet(f.read())
+        except:
+            pass
 
     def draw_temp_plot(self):
         self.ax.clear()
@@ -86,13 +84,15 @@ class IceCreamApp(QWidget):
         self.temperatures = []
         self.revenues = []
 
-        with open(file_path, "r", encoding="utf-8") as f:
-            reader = csv.reader(f)
-            next(reader, None)
-            for row in reader:
-                if row and len(row) >= 2:
-                    self.temperatures.append(float(row[0].strip()))
-                    self.revenues.append(float(row[1].strip()))
+        with open(file_path, "r") as f:
+            lines = f.readlines()
+
+        for line in lines[1:]:
+            line = line.strip()
+            if line:
+                parts = line.split(",")
+                self.temperatures.append(float(parts[0]))
+                self.revenues.append(float(parts[1]))
 
         self.draw_graph()
 
@@ -131,7 +131,7 @@ class IceCreamApp(QWidget):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    app = QApplication([])
     window = IceCreamApp()
     window.show()
-    sys.exit(app.exec())
+    app.exec()

@@ -1,5 +1,3 @@
-import sys
-import os
 from PySide6.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QVBoxLayout
 from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt
@@ -15,9 +13,8 @@ class AboutWindow(QWidget):
         layout.setAlignment(Qt.AlignCenter)
 
         self.image_label = QLabel(self)
-        img_path = os.path.join(os.path.dirname(__file__), "profile.png")
-        if os.path.exists(img_path):
-            pixmap = QPixmap(img_path)
+        pixmap = QPixmap("profile.png")
+        if not pixmap.isNull():
             self.image_label.setPixmap(pixmap.scaled(130, 130, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         self.image_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.image_label)
@@ -49,7 +46,7 @@ class AboutWindow(QWidget):
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
+    app = QApplication([])
     window = AboutWindow()
     window.show()
     app.exec()
