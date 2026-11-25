@@ -95,7 +95,21 @@ class IceCreamApp(QWidget):
         self.draw_graph()
 
     def draw_graph(self):
-        pass
+        if not self.temperatures or not self.revenues:
+            return
+
+        self.ax.clear()
+        self.ax.scatter(self.temperatures, self.revenues, s=1, color='#2b6cb0', label='Daily Revenue')
+
+        self.ax.spines['top'].set_visible(False)
+        self.ax.spines['right'].set_visible(False)
+
+        self.ax.set_title("Ice Cream Revenue vs Outside Temperature", fontsize=13, fontweight='bold', pad=12)
+        self.ax.set_xlabel("Outside Temperature (°C)", fontsize=11)
+        self.ax.set_ylabel("Ice Cream Revenue ($)", fontsize=11)
+
+        self.ax.legend(loc='upper left', frameon=False)
+        self.canvas.draw()
 
     def open_about(self):
         if self.about_window is None:
