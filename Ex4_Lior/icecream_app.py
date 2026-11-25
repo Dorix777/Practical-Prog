@@ -10,7 +10,10 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 
-from About import AboutWindow
+try:
+    from About import AboutWindow
+except ImportError:
+    from Ex4_Lior.About import AboutWindow
 
 
 class IceCreamApp(QWidget):
@@ -64,7 +67,11 @@ class IceCreamApp(QWidget):
             with open("icecream_style.qss", "r") as f:
                 self.setStyleSheet(f.read())
         except:
-            pass
+            try:
+                with open("Ex4_Lior/icecream_style.qss", "r") as f:
+                    self.setStyleSheet(f.read())
+            except:
+                pass
 
     def draw_temp_plot(self):
         self.ax.clear()

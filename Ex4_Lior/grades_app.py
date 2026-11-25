@@ -6,7 +6,10 @@ from PySide6.QtWidgets import (
 from PySide6.QtGui import QIntValidator, QDesktopServices
 from PySide6.QtCore import Qt, QUrl
 
-from About import AboutWindow
+try:
+    from About import AboutWindow
+except ImportError:
+    from Ex4_Lior.About import AboutWindow
 
 
 class GradesApp(QWidget):
@@ -78,7 +81,11 @@ class GradesApp(QWidget):
             with open("grades_style.qss", "r") as f:
                 self.setStyleSheet(f.read())
         except:
-            pass
+            try:
+                with open("Ex4_Lior/grades_style.qss", "r") as f:
+                    self.setStyleSheet(f.read())
+            except:
+                pass
 
     def load_file(self):
         file_path, _ = QFileDialog.getOpenFileName(
